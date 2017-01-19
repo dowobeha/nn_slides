@@ -1,0 +1,242 @@
+\documentclass{beamer}
+%\setbeamertemplate{items}[ball] 
+\input{preamble}
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+%\usepackage{minted}
+\title{Neural Network Concepts}
+%\input{author}
+%\input{institution}
+\author{Biological and Artificial Neurons}
+
+\date{}
+
+\begin{document}
+
+\frame{
+\titlepage
+
+}
+
+\frame{\frametitle{Biology}
+
+  \begin{itemize}
+    \item Brain is complex, made of thousands or millions of interconnected cells
+    \item Neurons are slow compared to computers (milliseconds vs nanoseconds)
+    \item Nevertheless, brains can do things that computers can't
+    \item Processing in the brain appears to be massively parallel
+    \item Brains have redundancies
+  \end{itemize}
+
+}
+
+\frame{\frametitle{Anatomy of a biological neuron}
+  \includegraphics[width=\textwidth]{images/Blausen_0657_MultipolarNeuron}
+
+  \tiny{\url{https://commons.wikimedia.org/wiki/File:Blausen_0657_MultipolarNeuron.png}}
+}
+
+\frame{\frametitle{Networks of biological neurons}
+
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{images/Blausen_0657_MultipolarNeuron}
+  \end{center}
+  
+  \begin{itemize}
+    \item Outgoing signal transmitted along \textbf{axon}
+    \item \textbf{Synapse} is a connection point between neurons
+    \item Incoming signals received at \textbf{dendrite}
+  \end{itemize}
+
+}
+
+\frame{\frametitle{Networks of biological neurons}
+
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{images/Blausen_0657_MultipolarNeuron}
+  \end{center}
+  
+  \begin{itemize}
+    \item Electro-chemical signals propagate between neurons
+    \item Frequency modulation (FM)
+    \item Synaptic connections vary in strength (weight)
+  \end{itemize}
+
+}
+
+\frame{\frametitle{Anatomy of an artificial neuron}
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node (i01)                              {$i_1$};
+    \node (i02)      [below=5mm of i01]      {$i_2$};
+    \node (i_hidden) [below=5mm of i02]      {\vdots};
+    \node (i03)      [below=5mm of i_hidden] {\ };
+    \node (i0n)      [below=5mm of i03]      {$i_n$};
+    
+    \node[neuron] (n01) [right=20mm of i_hidden] {$f$};
+    
+    \node (out)      [right=20mm of n01] {$f(\sum_{i=1}^n w_i x_i)$};
+    
+    \draw [->] (i01) -- (n01) node [midway,above=0.5mm] {$w_1$};
+    \draw [->] (i02) -- (n01) node [midway,below=0.5mm] {$w_2$};
+    \draw [->] (i0n) -- (n01) node [midway,below=0.5mm] {$w_n$};
+    \draw [->]  (n01) -- (out);
+    
+  \end{tikzpicture}
+  \end{center}
+
+  Artificial neurons are extremely simplified models
+
+  \begin{itemize}
+    \item Incoming edges roughly correspond to denrites
+    \item Outgoing edge roughly corresponds to axon
+    \item Incoming edge weights roughly correspond to strength of synaptic connection
+  \end{itemize}
+
+}
+
+
+\frame{\frametitle{Networks of artificial neurons}
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i01)                              {$i_1$};
+    
+    \node [neuron] (n01)      [right=20mm of i01]     {$f_1$};
+    \node [neuron] (n02)      [below=10mm of n01]     {$f_2$};
+
+    \node          (i02)      [left=20mm of n02]      {$i_2$};
+    
+
+    \node [neuron] (n03)      [right=20mm of n01]     {$f_3$};
+    \node          (inv)      [below=5mm of  n03]     {\ };
+    \node [neuron] (n04)      [right=20mm of n02]     {$f_4$};
+
+    \node [neuron] (n05)      [right=20mm of inv]     {$f_5$};
+    
+    \node (out)      [right=20mm of n05] {$o$};
+    
+    \draw [->] (i01) -- (n01);
+    \draw [->] (i02) -- (n01);
+    
+    \draw [->] (i01) -- (n02);
+    \draw [->] (i02) -- (n02);
+    
+    \draw [->] (n01) -- (n03);
+    \draw [->] (n02) -- (n03);
+    
+    \draw [->] (n01) -- (n04);
+    \draw [->] (n02) -- (n04);
+    
+    \draw [->] (n03) -- (n05);
+    \draw [->] (n04) -- (n05);
+    
+    \draw [->] (n05) -- (out);
+    
+  \end{tikzpicture}
+  \end{center}
+
+  Artificial neural networks
+
+  \begin{itemize}
+    \item We must specify the function $f$
+    \item We must specify the network topology \\ (how many nodes, how they are connected)
+    \item We must specify a learning algorithm
+    \item We will learn the weights
+  \end{itemize}
+
+}
+
+
+\frame{\frametitle{Networks of artificial neurons}
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i01)                              {$i_1$};
+    
+    \node [neuron] (n01)      [right=20mm of i01]     {$f_1$};
+    \node [neuron] (n02)      [below=10mm of n01]     {$f_2$};
+
+    \node          (i02)      [left=20mm of n02]      {$i_2$};
+    
+
+    \node [neuron] (n03)      [right=20mm of n01]     {$f_3$};
+    \node          (inv)      [below=5mm of  n03]     {\ };
+    \node [neuron] (n04)      [right=20mm of n02]     {$f_4$};
+
+    \node [neuron] (n05)      [right=20mm of inv]     {$f_5$};
+    
+    \node (out)      [right=20mm of n05] {$o$};
+    
+    \draw [->] (i01) -- (n01);
+    \draw [->] (i02) -- (n01);
+    
+    \draw [->] (i01) -- (n02);
+    \draw [->] (i02) -- (n02);
+    
+    \draw [->] (n01) -- (n03);
+    \draw [->] (n02) -- (n03);
+    
+    \draw [->] (n01) -- (n04);
+    \draw [->] (n02) -- (n04);
+    
+    \draw [->] (n03) -- (n05);
+    \draw [->] (n04) -- (n05);
+    
+    \draw [->] (n05) -- (out);
+    
+  \end{tikzpicture}
+  \end{center}
+
+  Artificial neural networks
+
+  \begin{itemize}
+    \item Each artificial neuron (with its associated weights) \\ specifies a function
+	\item The entire neural network (with its associated weights) specifies a more complex function
+  \end{itemize}
+
+}
+
+
+\frame{\frametitle{The Big Picture}
+
+  A neural network is a \textbf{function approximator}
+
+  \begin{itemize}
+    \item We begin with training data (input-output pairs)
+  	\item We design a network topology
+	\item We select a learning algorithm
+	\item We learn the network weights \\ (using training data \& learning algorithm)
+  \end{itemize}  
+
+  \ \\
+
+  \ \\
+  
+  The result is a trained neural network capable of approximating the function which produced the input-output pairs.
+
+}
+
+\input{license}
+
+
+%\input{components/linear_unit}
+
+
+%\input{tmp}
+
+
+\end{document}

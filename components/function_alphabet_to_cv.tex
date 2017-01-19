@@ -1,0 +1,203 @@
+\begin{frame}
+
+\tikzstyle{every picture}+=[remember picture]
+
+%\frametitle{Functions}
+\note{
+A mathematical \textbf{function} is a relation that maps from input values $x$ to output values $y$.
+%
+To keep track of various functions, by convention each function is given a name.
+%
+\\ \ \\
+
+In this example, we have a function called $f$.
+%
+The function $f$ accepts a single input parameter.
+%
+For convenience, input parameters are also named; here our input parameter is called $x$.
+%
+In this example, the value of the input parameter $x$ is constrained to be any one letter from the set of letters in the English alphabet.
+%
+Given a concrete value for the input parameter $x$, applying the function $f$ will result in a value from the set \{vowel,consonant\} being assigned to $y$.
+%
+\\ \ \\
+
+Let's walk through an example.
+%
+If we apply the function $f$ to the input \textit{a}, the result is \textit{vowel}.
+%
+If we instead supply \textit{b} as the input, the result of the function is \textit{consonant}.
+%
+For every possible value of $x$, exactly one possible value of $y$ is returned.
+%
+In this example, the function returns \textit{vowel} for the input values \textit{a}, \textit{e}, \textit{i}, \textit{o}, and \textit{u}, and returns \textit{consonant} for the remaining values of $x$.
+
+}
+
+%\begin{exampleblock}
+\begin{center}
+$\tikzmark{functionOutput}y=\tikzmark{functionName}f(\tikzmark{functionInput}x)$
+\end{center}
+%\end{exampleblock}
+
+
+\begin{columns}[T] % align columns
+\begin{column}{.48\textwidth}
+\begin{center}
+
+Possible input values of $x$
+
+{\color{blue}\rule{\linewidth}{4pt}}
+
+\ \\ 
+
+\begin{tabular}{|c c c c|}
+\hline
+\tikz[baseline]{\node[anchor=base] (a) {a};} & \tikz[baseline]{\node[anchor=base] (h) {h};} & \tikz[baseline]{\node[anchor=base] (o) {o};} & \tikz[baseline]{\node[anchor=base] (v) {v};} \\
+\tikz[baseline]{\node[anchor=base] (b) {b};} & \tikz[baseline]{\node[anchor=base] (i) {i};} & \tikz[baseline]{\node[anchor=base] (p) {p};} & \tikz[baseline]{\node[anchor=base] (w) {w};} \\
+\tikz[baseline]{\node[anchor=base] (c) {c};} & \tikz[baseline]{\node[anchor=base] (j) {j};} & \tikz[baseline]{\node[anchor=base] (q) {q};} & \tikz[baseline]{\node[anchor=base] (x) {x};} \\
+\tikz[baseline]{\node[anchor=base] (d) {d};} & \tikz[baseline]{\node[anchor=base] (k) {k};} & \tikz[baseline]{\node[anchor=base] (r) {r};} & \tikz[baseline]{\node[anchor=base] (y) {y};} \\
+\tikz[baseline]{\node[anchor=base] (e) {e};} & \tikz[baseline]{\node[anchor=base] (l) {l};} & \tikz[baseline]{\node[anchor=base] (s) {s};} & \tikz[baseline]{\node[anchor=base] (z) {z};} \\
+\tikz[baseline]{\node[anchor=base] (f) {f};} & \tikz[baseline]{\node[anchor=base] (m) {m};} & \tikz[baseline]{\node[anchor=base] (t) {t};} &                                              \\
+\tikz[baseline]{\node[anchor=base] (g) {g};} & \tikz[baseline]{\node[anchor=base] (n) {n};} & \tikz[baseline]{\node[anchor=base] (u) {u};} &                                              \\
+\hline
+\end{tabular}
+\end{center}
+\end{column}%
+\hfill%
+\begin{column}{.48\textwidth}
+\begin{center}
+
+Possible output values of $y$
+
+{\color{red}\rule{\linewidth}{4pt}}
+
+\ \\
+
+\begin{tabular}{|c|}
+
+\hline
+\tikz[baseline]{\node[anchor=base] (vowel) {vowel};} \\
+\tikz[baseline]{\node[anchor=base] (consonant) {consonant};} \\
+\hline
+\end{tabular}
+\end{center}
+\end{column}%
+\end{columns}
+
+
+\begin{tikzpicture}[
+  remember picture,
+  overlay,
+  expl/.style={draw=orange,fill=orange!30,rounded corners,text width=3cm},
+  arrow/.style={red!80!black,ultra thick,->,>=latex}
+]
+\node[below=10mm of pic cs:functionName] (pointer) {};
+%\node<.>[draw=green!80!black,ultra thick, fit=(ptd),inner sep=-0.8mm,circle] {};
+\onslide<+>{}
+\draw<+>[arrow] (pointer) to ([xshift=0.5ex,yshift=-0.75ex]{pic cs:functionName});
+\draw<+>[arrow] (pointer) to ([xshift=0.5ex,yshift=-0.75ex]{pic cs:functionInput});
+\draw<+>[arrow] (pointer) to ([xshift=0.5ex,yshift=-0.75ex]{pic cs:functionOutput});
+
+\draw<+>[arrow] (pointer) to ([xshift=0.5ex,yshift=-0.75ex]{pic cs:functionName}); 
+\draw<+>[arrow] (pointer) to ([xshift=0.5ex,yshift=-0.75ex]{pic cs:functionInput});
+\draw<+>[arrow] (pointer) to ([xshift=0.5ex,yshift=-0.75ex]{pic cs:functionOutput});
+\onslide<+>{}
+\draw<+>[->,green!80!black,ultra thick] (a) to[out=0,in=180] (vowel);       \node<.>[draw=green!80!black,ultra thick, fit=(a),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (b) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(b),inner sep=-0.8mm,circle] {};
+
+
+\draw<+>[->,green!80!black,ultra thick] (a) to[out=0,in=180] (vowel);       \node<.>[draw=green!80!black,ultra thick, fit=(a),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (e) to[out=0,in=180] (vowel);       \node<.>[draw=green!80!black,ultra thick, fit=(e),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (i) to[out=0,in=180] (vowel);       \node<.>[draw=green!80!black,ultra thick, fit=(i),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (o) to[out=0,in=180] (vowel);       \node<.>[draw=green!80!black,ultra thick, fit=(o),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (u) to[out=0,in=180] (vowel);       \node<.>[draw=green!80!black,ultra thick, fit=(u),inner sep=-0.8mm,circle] {};
+
+\draw<+>[->,green!80!black,ultra thick] (c) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(c),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (d) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(d),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (f) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(f),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (g) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(g),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (h) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(h),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (j) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(j),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (k) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(k),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (l) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(l),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (m) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(m),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (n) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(n),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (p) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(p),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (q) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(q),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (r) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(r),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (s) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(s),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (t) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(t),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (v) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(v),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (w) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(w),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (x) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(x),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (y) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(y),inner sep=-0.8mm,circle] {};
+\draw<+>[->,green!80!black,ultra thick] (z) to[out=0,in=180] (consonant);   \node<.>[draw=green!80!black,ultra thick, fit=(z),inner sep=-0.8mm,circle] {};
+\end{tikzpicture}
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+
+\begin{minted}{swift}
+    enum EnglishLetter {
+      case a, b, c, d, e, f, g, h, i, j, k, l, m, 
+           n, o, p, q, r, s, t, u, v, w, x, y, z
+    }
+    
+    enum SpeechSound { case vowel, consonant }
+    
+    func f(x: EnglishLetter) -> SpeechSound {
+      
+      if (x==EnglishLetter.a || x==EnglishLetter.e || 
+          x==EnglishLetter.i || x==EnglishLetter.o || 
+          x==EnglishLetter.u) {     
+        return SpeechSound.vowel        
+      } else {        
+        return SpeechSound.consonant        
+      }
+      
+    }
+
+\end{minted}
+
+
+\note{Now let's consider how this function might be implemented in a traditional programming language.
+%
+For this example, we'll use the Swift programming language, but the ideas shown here should equally apply to most other programming languages.
+%
+\\ \ \\
+
+Let's begin by defining a type that enumerates the letters in the English alphabet:
+%
+enum EnglishLetter \{
+%
+case a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z \}
+%
+Next, let's define a type that enumerates the legal output values:
+%
+enum SpeechSound \{
+%
+case vowel, consonant \}
+%
+Given these two types, we now define a function \textit{f} that accepts an input parameter \textit{x} of type \textit{EnglishLetter} and which returns a value of type \textit{SpeechSound}.
+%
+If $x$ has the value \textit{a} or the value \textit{e} or the value \textit{i} or the value \textit{i} or the value \textit{o} or the value \textit{u}, the function \textit{f} should return \textit{vowel}.
+%
+Otherwise, the function should return \textit{consonant}.
+%
+\\ \ \\
+
+Once the function has been defined, we can call the function with various input values.
+%
+When called with $x$ set to \textit{a}, the function returns the value \textit{vowel}.
+When called with $x$ set to \textit{e}, the function returns the value \textit{vowel}.
+When called with $x$ set to \textit{q}, the function returns the value \textit{consonant}.
+When called with $x$ set to \textit{b}, the function returns the value \textit{consonant}.
+
+}
+
+\end{frame}
+

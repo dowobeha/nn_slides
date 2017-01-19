@@ -1,146 +1,33 @@
 \documentclass{beamer}
 \input{preamble}
+\usepackage{pgfpages}
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+\usepackage{minted}
 
-\title{Neural Networks for Language Processing}
-\input{author}
-\input{institution}
+\title{Neural Network Concepts}
+%\input{author}
+%\input{institution}
+\author{Mathematical Functions}
 
 \date{}
 
 \begin{document}
 
-\frame{\titlepage}
+\frame{
+\titlepage
 
-
-
-\frame {
-
-\begin{center}
-$f(x_1,x_2) = \sin(x_1) + x_1*x_2$ \ \ \ \ \ \ \ \ \ \ 
-$\bar{x_i} = \frac{\partial f_j}{\partial x_i}$
-\pause
-
-\begin{tikzpicture}[>=latex, scale=0.75, transform shape]
-\tikzstyle{every node}=[font=\large]
-\tikzstyle{every path}=[line width=1pt]
-
-\node[state,rectangle] (fxx) {$f(x_1,x_2)$};
-\node[state] (plus) [below=1.5cm of fxx] {$f_5$};
-\node[state] (sin) [below left=1.5cm and 0.5cm of plus] {$f_4$};
-\node[state] (mul) [below right=1.5cm and 0.5cm of plus] {$f_3$};
-\node[state] (x1) [below left=1.5cm and 0.5 cm of sin] {$f_1$};
-\node[state] (x2) [below right=1.5cm and 0.5 cm of mul] {$f_2$};
-
-\onslide<+>{
-\path[-]
-(plus) edge node {} (fxx)
-(sin) edge node {} (plus)
-(mul) edge node {} (plus)
-(x1) edge node {} (sin)
-(x1) edge node {} (mul)
-(x2) edge node {} (mul);
+\note{Let's take a look at one of the foundational concepts that underlie neural networks: mathematical functions.}
 }
 
-\onslide<+>{
-\path[->,blue]
-(plus) edge node {} (fxx)
-(sin) edge node {} (plus)
-(mul) edge node {} (plus)
-(x1) edge node {} (sin)
-(x1) edge node {} (mul)
-(x2) edge node {} (mul);
-}
-
-\onslide<.->{
-\node[state, draw=none,fill=none,blue] (w1) [left=0.1cm of x1] {$y_1 = f_1(x_1) = x_1$};
-\node[state, draw=none,fill=none,blue] (w2) [right=0.1cm of x2] {$y_2 = f_2(x_2) = x_2$};
-\node[state, draw=none,fill=none,blue] (w3) [right=0.1cm of mul] {$y_3 = f_3(y_1, y_2) = y_1 \cdot y_2$};
-\node[state, draw=none,fill=none,blue] (w4) [left=0.1cm of sin] {$y_4 = f_4(y_1) = \sin(y_1)$};
-\node[state, draw=none,fill=none,blue] (w5) [left=0.1cm of plus] {$y_5 = f_5(y_3, y_4) = y_3 + y_4$};
-\node[state, draw=none,fill=none,blue] (w6) [right=0.1cm of fxx] {$y_6 = f_6(y_5) = y_5$};
-}
-
-\onslide<+>{
-\path[<-,red]
-(plus) edge node [right] {$\bar{f_6} = \bar{y}_5 = \frac{\partial f_6}{\partial y_5} = 1$} (fxx)
-(sin) edge node [left, pos=.6] {$\bar{y}_4 = \frac{\partial f_6}{\partial y_4} = \frac{\partial f_6}{\partial y_5} \frac{\partial y_5}{\partial y_4} = \bar{y}_5 \frac{\partial f_5}{\partial y_4} = \bar{y}_5 \cdot 1 = \bar{y}_5$} (plus)
-(mul) edge node [right, pos=.6] {$\bar{y}_3 = \frac{\partial f_6}{\partial y_3} = \frac{\partial f_6}{\partial y_5} \frac{\partial y_5}{\partial y_3} = \bar{y}_5 \frac{\partial f_5}{\partial y_3} = \bar{y}_5 \cdot 1 = \bar{y}_5$} (plus)
-(x1) edge node [left,pos=.6] { $\frac{\partial f_6}{\partial y_1} = \bar{y}_4 \frac{\partial y_4}{\partial y_1} = \bar{y}_4\cdot\cos(y_1)$ } (sin)
-(x1) edge node [right, pos=.3] {$\bar{y}_{1^b}= \bar{y}_3\cdot y_2$} (mul)
-(x2) edge node [right, pos=.6] {$\bar{y}_2 = \bar{y}_3 \frac{\partial y_3}{\partial y_2} = \bar{y}_3\cdot y_1$} (mul);
-
-}
-
-\end{tikzpicture}
-\end{center}
-}
+\input{components/function_alphabet_to_cv}
+\input{license}
 
 
-
-\frame {
-
-\begin{center}
-$f(x_1,x_2) = \sin(x_1) + x_1*x_2$
-
-\ \\
-
-\pause
-
-\begin{tikzpicture}[>=latex, scale=0.75, transform shape]
-\tikzstyle{every node}=[font=\large]
-\tikzstyle{every path}=[line width=1pt]
-
-\node[state,rectangle] (fxx) {$f(x_1,x_2)$};
-\node[state] (plus) [below=1.5cm of fxx] {$+$};
-\node[state] (sin) [below left=1.5cm and 0.5cm of plus] {$\sin$};
-\node[state] (mul) [below right=1.5cm and 0.5cm of plus] {$*$};
-\node[state,rectangle] (x1) [below left=1.5cm and 0.5 cm of sin] {$x_1$};
-\node[state,rectangle] (x2) [below right=1.5cm and 0.5 cm of mul] {$x_2$};
-
-\onslide<+>{
-\path[-]
-(plus) edge node {} (fxx)
-(sin) edge node {} (plus)
-(mul) edge node {} (plus)
-(x1) edge node {} (sin)
-(x1) edge node {} (mul)
-(x2) edge node {} (mul);
-}
-
-\onslide<+>{
-\path[->,blue]
-(plus) edge node {} (fxx)
-(sin) edge node {} (plus)
-(mul) edge node {} (plus)
-(x1) edge node {} (sin)
-(x1) edge node {} (mul)
-(x2) edge node {} (mul);
-}
-
-\onslide<.->{
-\node[state, draw=none,fill=none,blue] (w1) [left=0.1cm of x1] {$y_1 = x_1$};
-\node[state, draw=none,fill=none,blue] (w2) [right=0.1cm of x2] {$y_2 = x_2$};
-\node[state, draw=none,fill=none,blue] (w3) [right=0.1cm of mul] {$y_3 = y_1 \cdot y_2$};
-\node[state, draw=none,fill=none,blue] (w4) [left=0.1cm of sin] {$y_4 = \sin(y_1)$};
-\node[state, draw=none,fill=none,blue] (w4) [left=0.1cm of plus] {$y_5 = y_3 + y_4$};
-}
-
-\onslide<+>{
-\path[<-,red]
-(plus) edge node [right] {$\bar{f} = \bar{y}_5 = \frac{\partial f}{\partial y_5} = 1$} (fxx)
-(sin) edge node [left, pos=.6] {$\bar{y}_4 = \bar{y}_5 \frac{\partial y_5}{\partial y_4}$} (plus)
-(mul) edge node [right, pos=.6] {$\bar{y}_3 = \bar{y}_5 \frac{\partial y_5}{\partial y_3}$} (plus)
-(x1) edge node [left,pos=.6] { $\bar{y}_1^a = \bar{y}_4 \frac{\partial y_4}{\partial y_1} = \bar{y}_4\cdot\cos(y_1)$ } (sin)
-(x1) edge node [right, pos=.3] {$\bar{y}_1^b= \bar{y}_3\cdot y_2$} (mul)
-(x2) edge node [right, pos=.6] {$\bar{y}_2 = \bar{y}_3 \frac{\partial y_3}{\partial y_2} = \bar{y}_3\cdot y_1$} (mul);
-
-}
+%\input{components/linear_unit}
 
 
-\end{tikzpicture}
-\end{center}
-}
-
+%\input{tmp}
 
 
 \end{document}
