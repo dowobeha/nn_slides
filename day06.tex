@@ -1,0 +1,511 @@
+% !TEX TS-program = xelatex --shell-escape
+% !TEX encoding = UTF-8 Unicode
+%
+\documentclass{beamer}
+%\setbeamertemplate{items}[ball] 
+\input{preamble}
+\usepackage{pgfplots}
+
+\usepackage{mathtools}
+
+\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{\tiny def}}}{=}}
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+
+%\usepackage{ dsfont }
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+%\usepackage{minted}
+\title{Neural Network Concepts}
+%\input{author}
+%\input{institution}
+\author{Differential calculus}
+
+\date{}
+
+\begin{document}
+
+\frame{
+\titlepage
+
+}
+
+\frame{
+
+%\begin{axis}[
+%    axis lines=middle
+%]
+%\addplot {x^2+rand};
+%\end{axis}
+\begin{center}
+\begin{tikzpicture}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+%		\addplot+[mark=none,smooth] (\x,{sin(\x r)});
+%		\addplot {x};
+ 		\addplot[blue] {2*x + 1};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\ \\
+
+\onslide<2->{y = }$f(x) = mx + b$
+\pause
+
+\ \\
+
+\only<3>{$m = \frac{y - b}{x} $}
+
+\only<4>{$\forall_{(x_1, y_1), (x_2, y_2)} \ \ \ m = \frac{y_2 - y_1}{x_2 - x_1}$}
+
+\only<5>{$m = \frac{\Delta y}{\Delta x}$}
+
+\only<6>{$m = \frac{f(x + \Delta x) - f(x) }{\Delta x}$}
+
+\end{center}
+
+}
+
+
+\frame{
+
+\begin{center}
+
+\only<1>{
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {sin(deg(x))};
+	\end{axis}
+\end{tikzpicture}
+}
+
+\only<2>{
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {sin(deg(x))};
+		\addplot[red,mark=*] coordinates {(1.5707963267948966,0)};
+	\end{axis}
+\end{tikzpicture}
+}
+
+\only<3>{
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {sin(deg(x))};
+		\addplot[red,mark=*] coordinates {(1.5707963267948966,0)};
+		\addplot[red,smooth] {1)};
+	\end{axis}
+\end{tikzpicture}
+}
+
+\only<4>{
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {sin(deg(x))};
+		\addplot[red,mark=*] coordinates {(0,0)};
+	\end{axis}
+\end{tikzpicture}
+}
+
+\only<5>{
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {sin(deg(x))};
+		\addplot[red,mark=*] coordinates {(0,0)};
+		\addplot[red,smooth] {x)};
+	\end{axis}
+\end{tikzpicture}
+}
+
+\only<6-8>{
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {sin(deg(x))};
+		\addplot[red,mark=*] coordinates {(1.5707963267948966,0)};
+		\addplot[red,smooth] {x)};
+		\addplot[red,mark=*] coordinates {(0,0)};
+		\addplot[red,smooth] {1)};
+		\addplot[red!50!black,smooth] {cos(deg(x)))};
+	\end{axis}
+\end{tikzpicture}
+}
+
+
+
+\ \\
+
+\ \\
+
+$f \only<7>{= sin}$
+
+\ \\
+
+$D(f) = f^{\prime}\only<7>{ = cos}\only<8>{ = \Lim{\Delta x \rightarrow 0} \frac{f(x + \Delta x) - f(x) }{\Delta x}}$
+
+\end{center}
+
+
+}
+
+\frame{
+
+Function $f$ takes a single real-valued argument $x$
+
+\begin{equation}
+\textrm{\textbf{func}}\ \ f(x:\mathrm{I\!R}) \rightarrow \mathrm{I\!R}
+\end{equation}
+
+\ \\
+
+\ \\
+
+Function $D$ takes a function $f$ and produces a new function $f^{\prime}$
+
+\begin{equation}
+\textrm{\textbf{func}}\ \ D(f: \left\{ \mathrm{I\!R} \rightarrow \mathrm{I\!R} \right\}) \rightarrow \left\{ \mathrm{I\!R} \rightarrow \mathrm{I\!R} \right\}
+\end{equation}
+
+}
+
+
+\frame{
+
+Function $D$ takes a function $f$ and produces a new function $f^{\prime}$
+
+\begin{equation}
+\textrm{\textbf{func}}\ \ D(f: \left\{ \mathrm{I\!R} \rightarrow \mathrm{I\!R} \right\}) \rightarrow \left\{ \mathrm{I\!R} \rightarrow \mathrm{I\!R} \right\}
+\end{equation}
+
+\ \\
+
+\pause
+
+\begin{equation}
+f(x) = y
+\end{equation}
+
+\pause
+
+\begin{equation}
+\frac{dy}{dx} \  \defeq \  D(f) = f^{\prime}
+\end{equation}
+
+\pause
+
+\begin{equation}
+\frac{d}{dx} \  \defeq \  \frac{dy}{dx}
+\end{equation}
+
+}
+
+
+\frame{
+\begin{center}
+
+Trigonometric functions
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$\sin(x)$ & $\cos(x)$ \\ \hline
+$\cos(x)$ & $-\sin(x)$ \\ \hline
+$\tan(x)$ & $\sec(x) \times \sec(x)$ \\ \hline
+$\csc(x)$ & $-\csc(x) \times \cot(x)$ \\ \hline
+$\sec(x)$ & $\sec(x) \times \tan(x)$ \\ \hline
+$\cot(x)$ & $-\csc(x) \times \csc(x)$ \\ \hline
+\end{tabular}
+\end{center}
+
+}
+
+
+\frame{
+\begin{center}
+
+Inverse trigonometric functions
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$\arcsin(x)$ & $\frac{1}{\sqrt{1 - x^2}}$ \\ \hline
+$\arccos(x)$ & $\frac{-1}{\sqrt{1 - x^2}}$ \\ \hline
+$\arctan(x)$ & $\frac{1}{1 + x^2}$ \\ \hline
+$\textrm{arccsc}(x)$ & $\frac{-1}{|x|\sqrt{x^2 - 1}}$ \\ \hline
+$\textrm{arcsec}(x)$ & $\frac{1}{|x|\sqrt{x^2 - 1}}$ \\ \hline
+$\textrm{arccot}(x)$ & $\frac{-1}{1 + x^2}$ \\ \hline
+\end{tabular}
+\end{center}
+
+}
+
+
+
+
+\frame{
+\begin{center}
+
+Hyperbolic functions
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$\sinh(x)$ & $\cosh(x)$ \\ \hline
+$\cosh(x)$ & $\sinh(x)$ \\ \hline
+$\tanh(x)$ & $1 - \tanh(x) \times \tanh(x)$ \\ \hline
+$\textrm{csch}(x)$ & $-\coth(x) \times \textrm{csch}(x)$ \\ \hline
+$\textrm{sech}(x)$ & $-\tanh(x) \times \textrm{sech}(x)$ \\ \hline
+$\textrm{coth}(x)$ & $1 - \textrm{coth}(x) \times \textrm{coth}(x)$ \\ \hline
+\end{tabular}
+\end{center}
+
+}
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {0.3};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = c$ & $f^{\prime}(x) = 0$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {x};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = x$ & $f^{\prime}(x) = 1$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {x^2};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = x^2$ & $f^{\prime}(x) = 2x$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+\pgfplotsset{xmin=-2, xmax=2, ymin=-1.5, ymax=1.5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue,smooth] {x^3};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = x^n$ & $f^{\prime}(x) = n \times x^{n-1}$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+%\pgfplotsset{xmin=-5, xmax=100, ymin=-2, ymax=1000}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue] {pow(2,x)};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = c^x$ & $f^{\prime}(x) = c^x \times \ln(c)$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+%\pgfplotsset{xmin=-5, xmax=100, ymin=-2, ymax=1000}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue] {exp(x)};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = e^x$ & $f^{\prime}(x) = e^x$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+%\pgfplotsset{xmin=-5, xmax=5, ymin=-5, ymax=5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue] {ln(x)};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = ln(x)$ & $f^{\prime}(x) = \frac{1}{x}$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+\frame{
+
+\begin{center}
+
+\begin{tikzpicture}
+\pgfplotsset{xmin=-5, xmax=5, ymin=-5, ymax=5}
+	\begin{axis}[width=190pt,axis x line=middle, axis y line=center]
+ 		\addplot[blue] {x*2};
+	\end{axis}
+\end{tikzpicture}
+
+\ \\
+
+\begin{tabular}{|c|c|}
+\hline
+Function $f$ & Derivative $f^{\prime}$ \\
+\hline
+\hline
+$f(x) = c \times x$ & $f^{\prime}(x) = c$ \\ \hline
+\end{tabular}
+
+\end{center}
+
+}
+
+
+\frame{
+
+What about functions with higher arity?
+
+\ \\
+
+\begin{equation}
+f(x_1,x_2) = x_1 + x_2
+\end{equation}
+
+}
+
+
+
+\input{license}
+
+
+%\input{components/linear_unit}
+
+
+%\input{tmp}
+
+
+\end{document}
