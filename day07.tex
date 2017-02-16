@@ -1,0 +1,229 @@
+% !TEX TS-program = xelatex --shell-escape
+% !TEX encoding = UTF-8 Unicode
+%
+\documentclass{beamer}
+%\setbeamertemplate{items}[ball] 
+\input{preamble}
+\usepackage{pgfplots}
+
+%\usepackage{ dsfont }
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+%\usepackage{minted}
+\title{Neural Network Concepts}
+%\input{author}
+%\input{institution}
+\author{Differential calculus}
+
+\date{}
+
+\begin{document}
+
+\frame{
+\titlepage
+
+}
+
+\frame{
+
+\begin{center}
+
+Chain rule
+
+\ \\
+
+\begin{align*}
+x &= \ldots \\
+y &= f(x) \\
+z &= g(y)
+\end{align*}
+
+\end{center}
+
+}
+
+
+\frame{
+
+\begin{center}
+
+Let $f$ and $g$ each be functions with signature $\mathrm{I\!R} \rightarrow \mathrm{I\!R}$
+
+\pause
+\ \\
+
+Now, define:
+
+\begin{equation}
+h(x) = f(x) + g(x)
+\end{equation}
+
+\end{center}
+
+}
+
+
+\frame{
+
+Definition of derivative:
+
+\begin{align*}
+f^{\prime}(x) \defeq \Lim{\Delta x \rightarrow 0} \frac{f(x + \Delta x) - f(x) }{\Delta x}
+\end{align*}
+
+}
+
+\frame{ 
+
+\begin{align*}
+h(x) = f(x) + g(x)
+\end{align*}
+
+\begin{align*}
+\onslide<2->{h^{\prime}(x) &= \Lim{\Delta x \rightarrow 0} \frac{h(x + \Delta x) - h(x) }{\Delta x} \\ }
+\onslide<3->{ &= \Lim{\Delta x \rightarrow 0} \frac{\left[ f(x + \Delta x) + g(x + \Delta x) \right]  - [f(x) + g(x)] }{\Delta x} \\ }
+\onslide<4->{ &= \Lim{\Delta x \rightarrow 0} \frac{\left[ f(x + \Delta x) + g(x + \Delta x) \right]  - f(x) - g(x)] }{\Delta x}  \\ }
+\onslide<5->{ &= \Lim{\Delta x \rightarrow 0} \frac{[ f(x + \Delta x) - f(x)] + [ g(x + \Delta x) - g(x) ] }{\Delta x}  \\ }
+\onslide<6->{ &= \Lim{\Delta x \rightarrow 0} \frac{f(x + \Delta x) - f(x)}{\Delta x} + \Lim{\Delta x \rightarrow 0} \frac{g(x + \Delta x) - g(x)}{\Delta x}  \\ }
+\onslide<7->{h^{\prime}(x) &= f^{\prime}(x) + g^{\prime}(x) \\ }
+\end{align*}
+
+}
+
+\frame{ 
+
+\begin{align*}
+h(x) &= f(x) + g(x) \\
+h^{\prime}(x) &= f^{\prime}(x) + g^{\prime}(x)
+\end{align*}
+
+\pause
+Now, let $c$ be a constant, and define $f$ and $g$ as:
+\pause
+\begin{align*}
+f(x) &= x \ & g(x) &= c\\
+f^{\prime}(x) &= 1   & g^{\prime}(x) &= 0 \ 
+\end{align*}
+
+\pause
+Therefore
+
+\begin{align*}
+h(x) &= f(x) + g(x) \\
+     &= x + c \\
+h^{\prime}(x) &= f^{\prime}(x) + g^{\prime}(x) \\
+              &= 1 + 0 \\
+ &= 1 \\
+\end{align*}
+
+}
+
+\frame{
+
+\begin{align*}
+f(x) &= x + c \\
+f^{\prime}(x) &= 1 \\
+\end{align*}
+
+}
+
+\frame{
+
+Definition of partial derivative:
+
+\begin{align*}
+f_{x_i}^{\prime}(x_1, \ldots, x_{i-1}, x_i, x_{i+1} \ldots, x_n) \\ \ \\
+\frac{\partial}{\partial x_i} f(x_1, \ldots, x_{i-1}, x_i, x_{i+1} \ldots, x_n)
+%\defeq \Lim{\Delta x \rightarrow 0} \frac{f(x + \Delta x) - f(x) }{\Delta x}
+\end{align*}
+
+\begin{align*}
+f_{x_i} &= \frac{\partial f}{\partial x_i} \defeq \\ \ \\
+& \Lim{\Delta x_i \rightarrow 0} \frac{f(x_1, \ldots, x_{i-1}, x_i  + \Delta x_i, x_{i+1} \ldots, x_n) - f(x_1, \ldots, x_n) }{\Delta x_i}
+\end{align*}
+
+}
+
+
+\frame{
+
+\begin{align*}
+f(x_1, x_2) &= x_1 + x_2 \\
+f_{x_1}^{\prime}(x_1, x_2) &= 1 \\
+\frac{\partial}{\partial x} f(x_1, x_2) &= 1 \\
+\end{align*}
+
+}
+
+\frame{
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i01)                              {$x_1$};
+    \node          (b00)      [above=10mm of i01]     {$1$};
+    
+    \node [neuron] (n01)      [right=20mm of i01]     {$\tanh$};
+%    \node [neuron] (b10)      [above=10mm of n01]     {$1$};
+%    \node          (inv)      [below=5mm of  n01]     {\ };
+%    \node [neuron] (n02)      [below=10mm of n01]     {$f_4$};
+
+    \node          (i02)      [below=10mm of i01]      {$x_2$};
+    
+
+%    \node [neuron] (n03)      [right=20mm of n01]     {$f_3$};
+%    \node          (inv)      [below=5mm of  n03]     {\ };
+%    \node [neuron] (n04)      [right=20mm of n02]     {$f_4$};
+
+%    \node [neuron] (n03)      [right=20mm of inv]     {$f_{14}$};
+    
+%    \node (out)      [right=20mm of n01] {$o$};
+    
+    \draw [->] (b00) -- (n01) node[sloped, midway, above] {$w_3$} ;
+    \draw [->] (i01) -- (n01) node[midway, above] {$w_1$} ;
+    \draw [->] (i02) -- (n01) node[sloped, midway, above] {$w_2$} ;
+    
+%    \draw [->] (b00) -- (n02);
+%    \draw [->] (i01) -- (n02);
+%    \draw [->] (i02) -- (n02);
+%    
+%    \draw [->] (n01) -- (n03);
+%    \draw [->] (n02) -- (n03);
+%    
+%    \draw [->] (n01) -- (n04);
+%    \draw [->] (n02) -- (n04);
+%    
+%    \draw [->] (n01) -- (n03);
+%    \draw [->] (n02) -- (n03);
+    
+%    \draw [->] (n01) -- (out);
+    
+  \end{tikzpicture}
+
+  \end{center}
+
+
+
+\begin{align*}
+f(x_1, x_2) &= \tanh(x_1 \times w_1 + x_2 \times w_2) \\
+\end{align*}
+
+}
+
+
+
+
+\input{license}
+
+
+%\input{components/linear_unit}
+
+
+%\input{tmp}
+
+
+\end{document}

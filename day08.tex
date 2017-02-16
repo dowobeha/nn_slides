@@ -1,0 +1,663 @@
+% !TEX TS-program = xelatex --shell-escape
+% !TEX encoding = UTF-8 Unicode
+%
+\documentclass{beamer}
+%\setbeamertemplate{items}[ball] 
+\input{preamble}
+\usepackage{pgfplots}
+
+%\usepackage{ dsfont }
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+%\usepackage{minted}
+\title{Neural Network Concepts}
+%\input{author}
+%\input{institution}
+\author{Backpropagation}
+
+\date{}
+
+\begin{document}
+
+\frame{
+\titlepage
+
+}
+
+\frame{
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i01)                              {$x_1$};
+    \node          (b00)      [above=10mm of i01]     {$1$};
+    
+    \node [neuron] (n01)      [right=20mm of i01]     {$\sigma$};
+    \node [neuron] (e01)      [right=20mm of n01]     {$E$};
+    \node          (l01)      [below left=15mm of e01]     {$\ell$};
+%    \node [neuron] (b10)      [above=10mm of n01]     {$1$};
+%    \node          (inv)      [below=5mm of  n01]     {\ };
+%    \node [neuron] (n02)      [below=10mm of n01]     {$f_4$};
+
+    \node          (i02)      [below=10mm of i01]      {$x_2$};
+    
+
+%    \node [neuron] (n03)      [right=20mm of n01]     {$f_3$};
+%    \node          (inv)      [below=5mm of  n03]     {\ };
+%    \node [neuron] (n04)      [right=20mm of n02]     {$f_4$};
+
+%    \node [neuron] (n03)      [right=20mm of inv]     {$f_{14}$};
+    
+%    \node (out)      [right=20mm of n01] {$o$};
+    
+    \draw [->] (b00) -- (n01) node[sloped, midway, above] {$w_b$} ;
+    \draw [->] (i01) -- (n01) node[midway, above] {$w_1$} ;
+    \draw [->] (i02) -- (n01) node[sloped, midway, above] {$w_2$} ;
+    
+    \draw [->] (n01) -- (e01) ;
+    \draw [->] (l01) -- (e01) ;
+    
+%    \draw [->] (b00) -- (n02);
+%    \draw [->] (i01) -- (n02);
+%    \draw [->] (i02) -- (n02);
+%    
+%    \draw [->] (n01) -- (n03);
+%    \draw [->] (n02) -- (n03);
+%    
+%    \draw [->] (n01) -- (n04);
+%    \draw [->] (n02) -- (n04);
+%    
+%    \draw [->] (n01) -- (n03);
+%    \draw [->] (n02) -- (n03);
+    
+%    \draw [->] (n01) -- (out);
+    
+  \end{tikzpicture}
+
+  \end{center}
+
+
+
+\begin{align*}
+\sigma(x) &= \frac{1}{1 + e^{-x}} \\
+o(x_1, x_2) &= \sigma(x_1 w_1 + x_2 w_2 + w_b) \\
+E(o, \ell) &= \frac{1}{2} (o - \ell)^2
+\end{align*}
+
+}
+
+\frame{
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i01)                              {$x_1$};
+    \node          (b00)      [above=10mm of i01]     {$1$};
+    
+    \node [neuron] (n01)      [right=20mm of i01]     {$\sigma$};
+    \node [neuron] (e01)      [right=20mm of n01]     {$E$};
+    \node          (l01)      [below left=15mm of e01]     {$\ell$};
+%    \node [neuron] (b10)      [above=10mm of n01]     {$1$};
+%    \node          (inv)      [below=5mm of  n01]     {\ };
+%    \node [neuron] (n02)      [below=10mm of n01]     {$f_4$};
+
+    \node          (i02)      [below=10mm of i01]      {$x_2$};
+    
+
+%    \node [neuron] (n03)      [right=20mm of n01]     {$f_3$};
+%    \node          (inv)      [below=5mm of  n03]     {\ };
+%    \node [neuron] (n04)      [right=20mm of n02]     {$f_4$};
+
+%    \node [neuron] (n03)      [right=20mm of inv]     {$f_{14}$};
+    
+%    \node (out)      [right=20mm of n01] {$o$};
+    
+    \draw [->] (b00) -- (n01) node[sloped, midway, above] {$w_b$} ;
+    \draw [->] (i01) -- (n01) node[midway, above] {$w_1$} ;
+    \draw [->] (i02) -- (n01) node[sloped, midway, above] {$w_2$} ;
+    
+    \draw [->] (n01) -- (e01) ;
+    \draw [->] (l01) -- (e01) ;
+    
+%    \draw [->] (b00) -- (n02);
+%    \draw [->] (i01) -- (n02);
+%    \draw [->] (i02) -- (n02);
+%    
+%    \draw [->] (n01) -- (n03);
+%    \draw [->] (n02) -- (n03);
+%    
+%    \draw [->] (n01) -- (n04);
+%    \draw [->] (n02) -- (n04);
+%    
+%    \draw [->] (n01) -- (n03);
+%    \draw [->] (n02) -- (n03);
+    
+%    \draw [->] (n01) -- (out);
+    
+  \end{tikzpicture}
+
+  \end{center}
+
+
+
+\begin{align*}
+E(x_1, x_2, \ell) &= \frac{1}{2} \left(\frac{1}{1 + e^{-(x_1 w_1 + x_2 w_2 + w_b)}} - \ell\right)^2 \\
+%\frac{\partial E}{\partial x_1} = \frac{\partial }{\partial }
+                  &= f_1(x_1, x_2, \ell)
+\end{align*}
+
+}
+
+
+\frame{
+\Huge
+\center{
+Re-write $E(x_1, x_2, \ell)$ \\ \ \\ \Large as composition of simple functions
+}
+}
+
+
+\begin{frame}[label=diagram]
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle split,rotate=90,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (x01)                              {$x_1$};
+    \node [neuron] (f08)      [right=15mm of x01]     {\rotatebox{-90}{$\frac{\partial f_8}{\partial x_1}$} \nodepart{lower} \rotatebox{-90}{\ $f_8$}};
+    
+    \node          (x02)      [below=15mm of x01]     {$x_2$};
+	\node [neuron] (f09)      [right=15mm of x02]      {\rotatebox{-90}{$\frac{\partial f_9}{\partial x_2}$} \nodepart{lower} \rotatebox{-90}{\ $f_9$}};
+	%\node [circle split,draw,rotate=90] (z){\rotatebox{-90}{$a$} \nodepart{lower} \rotatebox{-90}{$b$}};
+	    
+    \node          (b01)      [above=15mm of x01]     {$b$};
+    \node [neuron] (f10)      [right=15mm of  b01]     {\rotatebox{-90}{$\frac{\partial f_b}{\partial b}$} \nodepart{lower} \rotatebox{-90}{\ $f_{b}$}};
+    
+    \node [neuron] (f07)      [right=15mm of f08]      {\rotatebox{-90}{${f_7^{\prime}}$} \nodepart{lower} \rotatebox{-90}{\ $f_7$}};
+    \node [neuron] (f06)      [right=15mm of f07]      {\rotatebox{-90}{$\frac{\partial f_6}{\partial f_7}$} \nodepart{lower} \rotatebox{-90}{\ $f_6$}};
+    \node [neuron] (f05)      [right=15mm of f06]      {\rotatebox{-90}{$\frac{\partial f_5}{\partial f_6}$} \nodepart{lower} \rotatebox{-90}{\ $f_5$}};
+    \node [neuron] (f04)      [right=15mm of f05]      {\rotatebox{-90}{$\frac{\partial f_4}{\partial f_5}$} \nodepart{lower} \rotatebox{-90}{\ $f_4$}};
+
+    \node          (l01)      [below=15mm of f04]     {$\ell$};
+    
+    \node [neuron] (f03)      [right=15mm of f04]      {\rotatebox{-90}{$\frac{\partial f_3}{\partial f_4}$} \nodepart{lower} \rotatebox{-90}{\ $f_3$}};
+    \node [neuron] (f02)      [right=15mm of f03]      {\rotatebox{-90}{$\frac{\partial f_2}{\partial f_3}$} \nodepart{lower} \rotatebox{-90}{\ $f_2$}};
+    \node [neuron] (f01)      [right=15mm of f02]     {\rotatebox{-90}{$\frac{\partial f_1}{\partial f_2}$} \nodepart{lower} \rotatebox{-90}{\ $f_1$}};
+    %\node [neuron] (E)        [right=15mm of f02]      {$E$};
+        
+        
+    \draw [->] (b01) -- (f10) ;
+    \draw [->] (x01) -- (f08) ;
+    \draw [->] (x02) -- (f09) ;
+    \draw [->] (f10) -- (f07) ;
+    \draw [->] (f09) -- (f07) ;
+    \draw [->] (f08) -- (f07) ;
+    \draw [->] (f07) -- (f06) ;   
+    \draw [->] (f06) -- (f05) ;
+    \draw [->] (f05) -- (f04) ;
+    \draw [->] (f04) -- (f03) ;
+    \draw [->] (l01) -- (f03) ;
+    \draw [->] (f03) -- (f02) ;
+    \draw [->] (f02) -- (f01) ;
+     
+  \end{tikzpicture}
+
+  \end{center}
+\end{frame}
+
+
+\frame{
+
+\begin{align*}
+E(x_1, x_2, \ell) &= \only<2>{\textcolor{red}}{\frac{1}{2}} \left(\frac{\only<5>{\textcolor{red}}{1}}{\only<6>{\textcolor{red}}{1 +} \only<7>{\textcolor{red}}{e}^{\only<8>{\textcolor{red}}{-}(\only<10>{\textcolor{red}}{x_1 w_1} \only<9>{\textcolor{red}}{+} \only<11>{\textcolor{red}}{x_2 w_2} \only<9>{\textcolor{red}}{+} w_b)}}\only<4>{\textcolor{red}}{ - \ell}\right)^{\only<3>{\textcolor{red}}{2}} \\ 
+\onslide<2->{f_0(x_1, x_2, \ell) &= \only<2>{\textcolor{red}}{\frac{1}{2}} f_1(x_1, x_2, \ell) \\}
+\onslide<3->{f_1(x_1, x_2, \ell) &= {f_2(x_1, x_2, \ell)}^{\only<3>{\textcolor{red}}{2}} \\}
+\onslide<4->{f_2(x_1, x_2, \ell) &= f_3(x_1, x_2)\only<4>{\textcolor{red}}{ - \ell} \\ }
+\onslide<5->{f_3(x_1, x_2) &= \frac{\only<5>{\textcolor{red}}{1}}{f_4(x_1, x_2)} \\}
+\onslide<6->{f_4(x_1, x_2) &= \only<6>{\textcolor{red}}{1 + }f_5(x_1, x_2) \\}
+\onslide<7->{f_5(x_1, x_2) &= \only<7>{\textcolor{red}}{e}^{f_6(x_1,x_2)} \\ }
+\onslide<8->{f_6(x_1, x_2) &= \only<8>{\textcolor{red}}{-1 \times} f_7(x_1, x_2) \\}
+\onslide<9->{f_7(x_1, x_2) &= f_8(x_1) \only<9>{\textcolor{red}}{+} f_9(x_2) \only<9>{\textcolor{red}}{+} w_b \\}
+\onslide<10->{f_8(x_1) &= \only<10>{\textcolor{red}}{x_1 w_1} \\}
+\onslide<11->{f_9(x_2) &= \only<11>{\textcolor{red}}{x_2 w_2}}
+\end{align*}
+
+}
+
+\frame{
+\Huge
+\center{
+Derive $\frac{\partial E}{\partial x_1}$
+}
+}
+
+\againframe{diagram}
+
+\frame {
+
+\begin{align*}
+E(x_1, x_2, \ell) &= \textcolor{red}{\frac{1}{2} \left(\frac{1}{1 + e^{-(x_1 w_1 + x_2 w_2 + w_b)}} - \ell\right)^2} \\
+\frac{\partial E}{\partial x_1} &= 
+    \textcolor{blue}{\frac{\partial E}{\partial f_0}} 
+    \frac{\partial f_0}{\partial f_1} 
+    \frac{\partial f_1}{\partial f_2} 
+    \frac{\partial f_2}{\partial f_3} 
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        E(x_1, x_2, \ell) &= \textcolor{red}{f_0(x_1, x_2, \ell)} \\
+        \textcolor{blue}{\frac{\partial E}{\partial f_0}} &= 1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x \\
+        \frac{\partial f}{\partial x} = 1
+        \end{align*}
+}
+
+\frame {
+
+\begin{align*}
+E(x_1, x_2, \ell) &= \textcolor{red}{\frac{1}{2}} \left(\frac{1}{1 + e^{-(x_1 w_1 + x_2 w_2 + w_b)}} - \ell\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    \textcolor{blue}{\frac{\partial f_0}{\partial f_1}} 
+    \frac{\partial f_1}{\partial f_2} 
+    \frac{\partial f_2}{\partial f_3} 
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_0 &= \textcolor{red}{\frac{1}{2}} f_1(x_1, x_2, \ell) \\
+        \textcolor{blue}{\frac{\partial f_0}{\partial f_1}} &= \frac{1}{2}
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = c x \\
+        \frac{\partial f}{\partial x} = c
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{1}{1 + e^{-(x_1 w_1 + x_2 w_2 + w_b)}} - \ell\right)^{\textcolor{red}{2}} \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    \textcolor{blue}{\frac{\partial f_1}{\partial f_2}} 
+    \frac{\partial f_2}{\partial f_3} 
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_1 &= f_2(x_1, x_2, \ell)^{\textcolor{red}{2}} \\
+        \textcolor{blue}{\frac{\partial f_1}{\partial f_2}} &= 2 f_2(x_1, x_2, \ell)
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x^c \\
+        \frac{\partial f}{\partial x} = c x^{c-1}
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{1}{1 + e^{-(x_1 w_1 + x_2 w_2 + w_b)}} \textcolor{red}{- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    \textcolor{blue}{\frac{\partial f_2}{\partial f_3}}
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_2 &= f_3(x_1, x_2) \textcolor{red}{- \ell} \\
+        \textcolor{blue}{\frac{\partial f_2}{\partial f_3}} &= 1 - 0
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x - c \\
+        \frac{\partial f}{\partial x} = 1 - 0
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{\textcolor{red}{1}}{1 + e^{-(x_1 w_1 + x_2 w_2 + w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    \textcolor{blue}{\frac{\partial f_3}{\partial f_4}}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_3 &= \frac{\textcolor{red}{1}}{f_4(x_1, x_2)} = {f_4(x_1, x_2)}^{-1} \\
+        \textcolor{blue}{\frac{\partial f_3}{\partial f_4}} &= -1 \times {f_4(x_1, x_2)}^{-2}
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x^c \\
+        \frac{\partial f}{\partial x} = c x^{c-1}
+        \end{align*}
+}
+
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{\textcolor{red}{1} \textcolor{red}{+} e^{-(x_1 w_1 + x_2 w_2 + w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    \textcolor{blue}{\frac{\partial f_4}{\partial f_5}}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_4 &= \textcolor{red}{1 + }{f_5(x_1, x_2)} \\
+        \textcolor{blue}{\frac{\partial f_4}{\partial f_5}} &= 0 + 1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = c + x \\
+        \frac{\partial f}{\partial x} = 0 + 1
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + \textcolor{red}{e}^{-(x_1 w_1 + x_2 w_2 + w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    \textcolor{blue}{\frac{\partial f_5}{\partial f_6}}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_5 &= \textcolor{red}{e}^{f_5(x_1, x_2)} \\
+        \textcolor{blue}{\frac{\partial f_4}{\partial f_5}} &= e^{f_5(x_1, x_2)}
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = e^x \\
+        \frac{\partial f}{\partial x} = e^x
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{\textcolor{red}{-}(x_1 w_1 + x_2 w_2 + w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    \textcolor{blue}{\frac{\partial f_6}{\partial f_7}}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_6 &= \textcolor{red}{-}{f_7(x_1, x_2)} \\
+        \textcolor{blue}{\frac{\partial f_5}{\partial f_6}} &= -1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = cx \\
+        \frac{\partial f}{\partial x} = c
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{(x_1 w_1 \textcolor{red}{+} x_2 w_2 \textcolor{red}{+} w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    \textcolor{blue}{\frac{\partial f_7}{\partial f_8}}
+    \frac{\partial f_8}{\partial x_1}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_7 &= {f_8(x_1, x_2)} \textcolor{red}{+} f_9(x_1,x_2) \textcolor{red}{+} w_b \\
+        \textcolor{blue}{\frac{\partial f_7}{\partial f_8}} &= 1 + 0 + 0
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x + c \\
+        \frac{\partial f}{\partial x} = 1 + 0
+        \end{align*}
+}
+
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{(\textcolor{red}{x_1 w_1} {+} x_2 w_2 {+} w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    {\frac{\partial f_7}{\partial f_8}}
+    \textcolor{blue}{\frac{\partial f_8}{\partial x_1}}
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_8 &= \textcolor{red}{x_1 w_1} \\
+        \textcolor{blue}{\frac{\partial f_8}{\partial x_1}} &= w_1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = c x \\
+        \frac{\partial f}{\partial x} = c
+        \end{align*}
+}
+
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{({x_1 w_1} {+} x_2 w_2 {+} w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_1} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    {\frac{\partial f_7}{\partial f_8}}
+    {\frac{\partial f_8}{\partial x_1}}
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        \frac{\partial E}{\partial x_1} =& 1 \times \frac{1}{2} \times 2 f_2(x_1, x_2, \ell) \times 1 \times {-1 \times f_4(x_1, x_2)}^{-2} \times \\
+         & 1 \times e^{f_5(x_1, x_2)} \times -1 \times 1 \times w_1 \\
+        \end{align*}
+        
+                \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        \frac{\partial E}{\partial x_1} =&  f_2(x_1, x_2, \ell) \times {f_4(x_1, x_2)}^{-2} \times e^{f_5(x_1, x_2)} \times w_1
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{({x_1 w_1} {+} x_2 w_2 {+} w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_2} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    {\frac{\partial f_7}{\partial f_8}}
+    {\frac{\partial f_8}{\partial x_2}}
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        \frac{\partial E}{\partial x_2} =& 1 \times \frac{1}{2} \times 2 f_2(x_1, x_2, \ell) \times 1 \times {-1 \times f_4(x_1, x_2)}^{-2} \times \\
+         & 1 \times e^{f_5(x_1, x_2)} \times -1 \times 1 \times w_2 \\
+        \end{align*}
+        
+                \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        \frac{\partial E}{\partial x_2} =&  f_2(x_1, x_2, \ell) \times {f_4(x_1, x_2)}^{-2} \times e^{f_5(x_1, x_2)} \times w_2
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(x_1, x_2, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{({x_1 w_1} {+} x_2 w_2 {+} b w_b)}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial b} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    {\frac{\partial f_7}{\partial f_8}}
+    {\frac{\partial f_8}{\partial x_2}}
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        \frac{\partial E}{\partial b} =& 1 \times \frac{1}{2} \times 2 f_2(x_1, x_2, \ell) \times 1 \times {-1 \times f_4(x_1, x_2)}^{-2} \times \\
+         & 1 \times e^{f_5(x_1, x_2)} \times -1 \times 1 \times 1 \\
+        \end{align*}
+        
+                \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        \frac{\partial E}{\partial b} =&  f_2(x_1, x_2, \ell) \times {f_4(x_1, x_2)}^{-2} \times e^{f_5(x_1, x_2)} \times 1
+        \end{align*}
+}
+
+\againframe{diagram}
+
+\input{license}
+
+
+%\input{components/linear_unit}
+
+
+%\input{tmp}
+
+
+\end{document}

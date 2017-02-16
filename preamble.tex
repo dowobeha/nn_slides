@@ -6,9 +6,9 @@
 %\usepackage{beamerthemesplit}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usetikzlibrary{arrows,automata,positioning,shapes,shapes.geometric,fit,tikzmark}
+\usetikzlibrary{arrows,automata,positioning,shapes,shapes.geometric,fit,tikzmark,calc}
 \usefonttheme[onlymath]{serif}
-
+\usepackage{bm}
 \usepackage{enumitem}
 
 \usepackage{textcomp}
@@ -39,4 +39,9 @@
 \usepackage{graphicx}
 \usepackage{enumitem}
 \setlist[itemize,1]{label={\fontfamily{cmr}\fontencoding{T1}\selectfont\textbullet}}
+
+\usepackage{mathtools}
+
+\newcommand\defeq{\stackrel{\mathclap{\normalfont\mbox{\tiny def}}}{=}}
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
 

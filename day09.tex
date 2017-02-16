@@ -1,0 +1,723 @@
+% !TEX TS-program = xelatex --shell-escape
+% !TEX encoding = UTF-8 Unicode
+%
+\documentclass{beamer}
+%\setbeamertemplate{items}[ball] 
+\input{preamble}
+\usepackage{pgfplots}
+
+%\usepackage{ dsfont }
+%\setbeamertemplate{note page}[plain]
+%\setbeameroption{show notes on second screen=right}
+%\usepackage{minted}
+\title{Neural Network Concepts}
+%\input{author}
+%\input{institution}
+\author{Linear algebra}
+
+\date{}
+
+\begin{document}
+
+\frame{
+\titlepage
+
+}
+
+\frame{
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=1.5pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i00)                               {$1$};
+    \node          (i01)      [below=5mm of i00]      {$x_1$};
+    \node          (i02)      [below=5mm of i01]      {$x_2$};
+    \node          (i03)      [below=5mm of i02]      {\vdots};
+    \node          (i0N)      [below=5mm of i03]      {$x_n$};
+    
+    \node [neuron] (n01)      [right=20mm of i02]     {$f$ \nodepart{lower} {$g$} };
+    \node [neuron] (e01)      [right=20mm of n01]     {$E$};
+    \node          (l01)      [below left=15mm of e01]     {$\ell$};
+
+    
+
+    
+    \draw [->] (i00) -- (n01) node[sloped, midway, above] {\only<1>{$w_b$}\only<2>{$w_0$}} ;
+    \draw [->] (i01) -- (n01) node[midway, above] {$w_1$} ;
+    \draw [->] (i02) -- (n01) node[sloped, midway, above] {$w_2$} ;
+    \draw [->] (i0N) -- (n01) node[sloped, midway, above] {$w_n$} ;
+        
+    \draw [->] (n01) -- (e01) ;
+    \draw [->] (l01) -- (e01) ;
+    
+  \end{tikzpicture}
+
+  \end{center}
+
+\vspace{-1cm}
+
+\begin{columns}[c]
+	\column{.25\textwidth}
+    \column{.25\textwidth}
+        \begin{center}
+          \begin{align*}
+            \bm{x} &= \begin{bmatrix}
+                   \only<2>{1     \\}
+                   x_{1} \\
+                   x_{2} \\
+                   \vdots \\
+                   x_{n}
+                 \end{bmatrix}
+          \end{align*}
+        \end{center}
+    \column{.25\textwidth}
+        \begin{center}
+          \begin{align*}
+            \bm{w} &= \begin{bmatrix}
+                   \only<2>{w_{0} \\}
+                   w_{1} \\
+                   w_{2} \\
+                   \vdots \\
+                   w_{n}
+                 \end{bmatrix}
+          \end{align*}
+ 
+        \end{center}
+     \column{.25\textwidth}
+\end{columns}
+
+\only<1>{
+\begin{align*}
+o &= f(\bm{x} \cdot \bm{w} + w_b) \\
+  &= f\left(w_b + \sum_{i=1}^n x_i w_i\right)
+\end{align*}
+}
+
+\only<2>{
+\begin{align*}
+o &= f(\bm{x} \cdot \bm{w}) \\
+  &= f\left(\sum_{i=0}^n x_i w_i\right)
+\end{align*}
+}
+
+}
+
+\frame{
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=1.5pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i00)                               {$x_0$};
+    \node          (i01)      [below=5mm of i00]      {$x_1$};
+    \node          (i02)      [below=5mm of i01]      {$x_2$};
+    \node          (i03)      [below=5mm of i02]      {\vdots};
+    \node          (i0N)      [below=5mm of i03]      {$x_n$};
+    
+    \node [neuron] (n01)      [right=20mm of i02]     {$\sigma$};
+    \node [neuron] (e01)      [right=20mm of n01]     {$E$};
+    \node          (l01)      [below left=15mm of e01]     {$\ell$};
+
+    
+
+    
+    \draw [->] (i00) -- (n01) node[sloped, midway, above] {$w_0$} ;
+    \draw [->] (i01) -- (n01) node[midway, above] {$w_1$} ;
+    \draw [->] (i02) -- (n01) node[sloped, midway, above] {$w_2$} ;
+    \draw [->] (i0N) -- (n01) node[sloped, midway, above] {$w_n$} ;
+        
+    \draw [->] (n01) -- (e01) ;
+    \draw [->] (l01) -- (e01) ;
+    
+  \end{tikzpicture}
+
+  \end{center}
+
+
+
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= \frac{1}{2} \left(\frac{1}{1 + e^{-(\bm{x} \cdot \bm{w})}} - \ell\right)^2 \\
+%\frac{\partial E}{\partial x_i} = \frac{\partial }{\partial }
+                  &= f_1(\bm{x}, \bm{w}, \ell)
+\end{align*}
+
+}
+
+
+\frame{
+\Huge
+\center{
+Re-write $E(\bm{x}, \bm{w}, \ell)$ \\ \ \\ \Large as composition of simple functions
+}
+}
+
+
+\begin{frame}[label=diagram]
+
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle split,rotate=90,draw=black,fill=white,inner sep=0pt,minimum size=10mm,outer sep=0.5pt},
+     forward/.style={blue},
+     backward/.style={red},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (x01)                              {$x_i$};
+     \node          (w01)      [above=2mm of x01]     {$w_i$};
+     \node          (w0d1)      [below=6mm of w01]     {\vdots};
+     
+    \node [neuron] (f08)      [right=15mm of x01]     {\rotatebox{-90}{$\frac{\partial f_8}{\partial x_i}$} \nodepart{lower} \rotatebox{-90}{\ $f_8$}};
+    
+    \node          (x02)      [below=15mm of x01]     {$x_n$};
+    \node          (w02)      [above=2mm of x02]     {$w_n$};
+    
+	\node [neuron] (f09)      [right=15mm of x02]      {\rotatebox{-90}{$\frac{\partial f_8}{\partial x_n}$} \nodepart{lower} \rotatebox{-90}{\ $f_8$}};
+	%\node [circle split,draw,rotate=90] (z){\rotatebox{-90}{$a$} \nodepart{lower} \rotatebox{-90}{$b$}};
+	    
+    \node          (b01)      [above=15mm of x01]     {$x_0$};
+    \node          (w00)      [above=2mm of b01]     {$w_0$};
+    \node          (w0d0)      [below=6mm of w00]     {\vdots};
+    \node [neuron] (f10)      [right=15mm of  b01]     {\rotatebox{-90}{$\frac{\partial f_8}{\partial x_0}$} \nodepart{lower} \rotatebox{-90}{\ $f_{8}$}};
+    
+    \node [neuron] (f07)      [right=15mm of f09]      {\rotatebox{-90}{${\frac{\partial f_7}{\partial f_8}}$} \nodepart{lower} \rotatebox{-90}{\ $f_7$}};
+    \node [neuron] (f06)      [right=15mm of f07]      {\rotatebox{-90}{$\frac{\partial f_6}{\partial f_7}$} \nodepart{lower} \rotatebox{-90}{\ $f_6$}};
+    \node [neuron] (f05)      [right=15mm of f06]      {\rotatebox{-90}{$\frac{\partial f_5}{\partial f_6}$} \nodepart{lower} \rotatebox{-90}{\ $f_5$}};
+    \node [neuron] (f04)      [right=15mm of f05]      {\rotatebox{-90}{$\frac{\partial f_4}{\partial f_5}$} \nodepart{lower} \rotatebox{-90}{\ $f_4$}};    
+    \node [neuron] (f03)      [right=15mm of f04]      {\rotatebox{-90}{$\frac{\partial f_3}{\partial f_4}$} \nodepart{lower} \rotatebox{-90}{\ $f_3$}};
+        \node          (l01)      [below=15mm of f03]     {$\ell$};
+        
+    \node [neuron] (f02)      [right=15mm of f03]      {\rotatebox{-90}{$\frac{\partial f_2}{\partial f_3}$} \nodepart{lower} \rotatebox{-90}{\ $f_2$}};
+    \node [neuron] (f01)      [right=15mm of f02]     {\rotatebox{-90}{$\frac{\partial f_1}{\partial f_2}$} \nodepart{lower} \rotatebox{-90}{\ $f_1$}};
+     \node [neuron] (f00)      [right=15mm of f01]     {\rotatebox{-90}{$\frac{\partial f_0}{\partial f_1}$} \nodepart{lower} \rotatebox{-90}{\ $f_0$}};
+    %\node [neuron] (E)        [right=15mm of f02]      {$E$};
+        
+        
+    \draw [->] (b01) -- (f10) ;
+    \draw [->] (w00) -- (f10) ;
+    \draw [->] (x01) -- (f08) ;
+    \draw [->] (w01) -- (f08) ;
+    \draw [->] (w02) -- (f09) ;
+    \draw [->] (x02) -- (f09) ;
+    \draw [->] (f10) -- (f07) ;
+    \draw [->] (f09) -- (f07) ;
+    \draw [->] (f08) -- (f07) ;
+    \draw [->] (f07) -- (f06) ;   
+    \draw [->] (f06) -- (f05) ;
+    \draw [->] (f05) -- (f04) ;
+    \draw [->] (f04) -- (f03) ;
+    \draw [->] (l01) -- (f02) ;
+    \draw [->] (f03) -- (f02) ;
+    \draw [->] (f02) -- (f01) ;
+    \draw [->] (f01) -- (f00) ;
+    
+    
+    \node [forward] (v07) [below=5mm of f07] {$\bm{x}\cdot\bm{w}$};
+    \node [forward] (v06) [below=5mm of f06] {$- f_7$};
+    \node [forward] (v05) [below=5mm of f05] {$e^{f_6}$};
+    \node [forward] (v04) [below=5mm of f04] {$1+f_5$};
+    \node [forward] (v03) [below=2mm of f03] {$\frac{1}{f_4}$};
+    \node [forward] (v02) [below=5mm of f02] {$f_3 - \ell$};
+    \node [forward] (v01) [below=5mm of f01] {$f_2^2$};
+    \node [forward] (v00) [below=5mm of f00] {$\frac{1}{2} f_1$};
+
+
+    \node [backward] (d00) [below=-1mm of v00] {$\frac{1}{2}$};
+	\node [backward] (d01) [below=-1mm of v01] {$2 f_2$};
+	\node [backward] (d02) [below=-1mm of v02] {$1$};
+	\node [backward] (d03) [below left=-3mm of v03] {$- f_4^{-2}$};
+	\node [backward] (d04) [below=-1mm of v04] {$1$};
+    \node [backward] (d05) [below=-1mm of v05] {$e^{f_6}$};
+    \node [backward] (d06) [below=-1mm of v06] {$-1$};
+    \node [backward] (d07) [below=-1mm of v07] {$1$};
+    
+  \end{tikzpicture}
+
+  \end{center}
+\end{frame}
+
+
+\frame{
+
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= \only<2>{\textcolor{red}}{\frac{1}{2}} \left(\frac{\only<5>{\textcolor{red}}{1}}{\only<6>{\textcolor{red}}{1 +} \only<7>{\textcolor{red}}{e}^{\only<8>{\textcolor{red}}{-}(\only<9-10>{\textcolor{red}}{\bm{x} \cdot \bm{w}})}}\only<4>{\textcolor{red}}{ - \ell}\right)^{\only<3>{\textcolor{red}}{2}} \\ 
+\onslide<2->{f_0(\bm{x}, \bm{w}, \ell) &= \only<2>{\textcolor{red}}{\frac{1}{2}} f_1(\bm{x}, \bm{w}, \ell) \\}
+\onslide<3->{f_1(\bm{x}, \bm{w}, \ell) &= {f_2(\bm{x}, \bm{w}, \ell)}^{\only<3>{\textcolor{red}}{2}} \\}
+\onslide<4->{f_2(\bm{x}, \bm{w}, \ell) &= f_3(\bm{x}, \bm{w})\only<4>{\textcolor{red}}{ - \ell} \\ }
+\onslide<5->{f_3(\bm{x}, \bm{w}) &= \frac{\only<5>{\textcolor{red}}{1}}{f_4(\bm{x}, \bm{w})} \\}
+\onslide<6->{f_4(\bm{x}, \bm{w}) &= \only<6>{\textcolor{red}}{1 + }f_5(\bm{x}, \bm{w}) \\}
+\onslide<7->{f_5(\bm{x}, \bm{w}) &= \only<7>{\textcolor{red}}{e}^{f_6(\bm{x}, \bm{w})} \\ }
+\onslide<8->{f_6(\bm{x}, \bm{w}) &= \only<8>{\textcolor{red}}{-1 \times} f_7(\bm{x}, \bm{w}) \\}
+\onslide<9->{f_7(\bm{x}, \bm{w}) &= \only<9>{\textcolor{red}}{\sum_{i=0}^n} f_8(x_i, w_i) \\}
+\onslide<10->{f_8(x_i,w_i) &= \only<10>{\textcolor{red}}{x_i w_i} \\}
+\end{align*}
+
+}
+
+\frame{
+\Huge
+\center{
+Derive $\frac{\partial E}{\partial x_i}$
+}
+}
+
+\againframe{diagram}
+
+\frame {
+
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= \textcolor{red}{\frac{1}{2} \left(\frac{1}{1 + e^{-(\bm{x} \cdot \bm{w})}} - \ell\right)^2} \\
+\frac{\partial E}{\partial x_i} &= 
+    \textcolor{blue}{\frac{\partial E}{\partial f_0}} 
+    \frac{\partial f_0}{\partial f_1} 
+    \frac{\partial f_1}{\partial f_2} 
+    \frac{\partial f_2}{\partial f_3} 
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        E(\bm{x}, \bm{w}, \ell) &= \textcolor{red}{f_0(\bm{x}, \bm{w}, \ell)} \\
+        \textcolor{blue}{\frac{\partial E}{\partial f_0}} &= 1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x \\
+        \frac{\partial f}{\partial x} = 1
+        \end{align*}
+}
+
+\frame {
+
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= \textcolor{red}{\frac{1}{2}} \left(\frac{1}{1 + e^{-(\bm{x} \cdot \bm{w})}} - \ell\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    \textcolor{blue}{\frac{\partial f_0}{\partial f_1}} 
+    \frac{\partial f_1}{\partial f_2} 
+    \frac{\partial f_2}{\partial f_3} 
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_0 &= \textcolor{red}{\frac{1}{2}} f_1(\bm{x}, \bm{w}, \ell) \\
+        \textcolor{blue}{\frac{\partial f_0}{\partial f_1}} &= \frac{1}{2}
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = c x \\
+        \frac{\partial f}{\partial x} = c
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{1}{1 + e^{-(\bm{x} \cdot \bm{w})}} - \ell\right)^{\textcolor{red}{2}} \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    \textcolor{blue}{\frac{\partial f_1}{\partial f_2}} 
+    \frac{\partial f_2}{\partial f_3} 
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_1 &= f_2(\bm{x}, \bm{w}, \ell)^{\textcolor{red}{2}} \\
+        \textcolor{blue}{\frac{\partial f_1}{\partial f_2}} &= 2 f_2(\bm{x}, \bm{w}, \ell)
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x^c \\
+        \frac{\partial f}{\partial x} = c x^{c-1}
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{1}{1 + e^{-(\bm{x} \cdot \bm{w})}} \textcolor{red}{- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    \textcolor{blue}{\frac{\partial f_2}{\partial f_3}}
+    \frac{\partial f_3}{\partial f_4}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_2 &= f_3(\bm{x}, \bm{w}) \textcolor{red}{- \ell} \\
+        \textcolor{blue}{\frac{\partial f_2}{\partial f_3}} &= 1 - 0
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x - c \\
+        \frac{\partial f}{\partial x} = 1 - 0
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{\textcolor{red}{1}}{1 + e^{-(\bm{x} \cdot \bm{w})}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    \textcolor{blue}{\frac{\partial f_3}{\partial f_4}}
+    \frac{\partial f_4}{\partial f_5}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_3 &= \frac{\textcolor{red}{1}}{f_4(\bm{x}, \bm{w})} = {f_4(\bm{x}, \bm{w})}^{-1} \\
+        \textcolor{blue}{\frac{\partial f_3}{\partial f_4}} &= -1 \times {f_4(\bm{x}, \bm{w})}^{-2}
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x^c \\
+        \frac{\partial f}{\partial x} = c x^{c-1}
+        \end{align*}
+}
+
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{\textcolor{red}{1} \textcolor{red}{+} e^{-(\bm{x} \cdot \bm{w})}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    \textcolor{blue}{\frac{\partial f_4}{\partial f_5}}
+    \frac{\partial f_5}{\partial f_6}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_4 &= \textcolor{red}{1 + }{f_5(\bm{x}, \bm{w})} \\
+        \textcolor{blue}{\frac{\partial f_4}{\partial f_5}} &= 0 + 1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = c + x \\
+        \frac{\partial f}{\partial x} = 0 + 1
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + \textcolor{red}{e}^{-(\bm{x} \cdot \bm{w})}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    \textcolor{blue}{\frac{\partial f_5}{\partial f_6}}
+    \frac{\partial f_6}{\partial f_7}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_5 &= \textcolor{red}{e}^{f_5(\bm{x}, \bm{w})} \\
+        \textcolor{blue}{\frac{\partial f_4}{\partial f_5}} &= e^{f_5(\bm{x}, \bm{w})}
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = e^x \\
+        \frac{\partial f}{\partial x} = e^x
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{\textcolor{red}{-}(\bm{x} \cdot \bm{w})}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    \textcolor{blue}{\frac{\partial f_6}{\partial f_7}}
+    \frac{\partial f_7}{\partial f_8}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_6 &= \textcolor{red}{-}{f_7(\bm{x}, \bm{w})} \\
+        \textcolor{blue}{\frac{\partial f_5}{\partial f_6}} &= -1
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = cx \\
+        \frac{\partial f}{\partial x} = c
+        \end{align*}
+}
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{(f_8(x_i, w_i) \textcolor{red}{+} \sum_{j=0, j \neq i}^n} f_8(x_j, w_j))} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    \textcolor{blue}{\frac{\partial f_7}{\partial f_8}}
+    \frac{\partial f_8}{\partial x_i}  
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_7 &= f_8(x_i, w_i) \ \textcolor{red}{+} \sum_{j=0, j \neq i}^n {f_8(x_j, w_j)} \\
+        \textcolor{blue}{\frac{\partial f_7}{\partial f_8}} &= 1 + 0
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = x + c \\
+        \frac{\partial f}{\partial x} = 1 + 0
+        \end{align*}
+}
+
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{(\textcolor{red}{\bm{x} \cdot \bm{w}})}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    {\frac{\partial f_7}{\partial f_8}}
+    \textcolor{blue}{\frac{\partial f_8}{\partial x_i}}
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        f_8 &= \textcolor{red}{x_i w_i} \\
+        \textcolor{blue}{\frac{\partial f_8}{\partial x_i}} &= w_i
+        \end{align*}
+        
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        f(x) = c x \\
+        \frac{\partial f}{\partial x} = c
+        \end{align*}
+}
+
+
+\frame {
+\begin{align*}
+E(\bm{x}, \bm{w}, \ell) &= {\frac{1}{2}} \left(\frac{{1}}{1 + {e}^{(\bm{x} \cdot \bm{w})}} {- \ell}\right)^2 \\
+\frac{\partial E}{\partial x_i} &= 
+    {\frac{\partial E}{\partial f_0}} 
+    {\frac{\partial f_0}{\partial f_1}} 
+    {\frac{\partial f_1}{\partial f_2}} 
+    {\frac{\partial f_2}{\partial f_3}}
+    {\frac{\partial f_3}{\partial f_4}}
+    {\frac{\partial f_4}{\partial f_5}}
+    {\frac{\partial f_5}{\partial f_6}}
+    {\frac{\partial f_6}{\partial f_7}}
+    {\frac{\partial f_7}{\partial f_8}}
+    {\frac{\partial f_8}{\partial x_i}}
+\end{align*}
+
+        \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+                
+        \begin{align*}
+        \frac{\partial E}{\partial x_i} =& 1 \times \frac{1}{2} \times 2 f_2(\bm{x}, \bm{w}, \ell) \times 1 \times {-1 \times f_4(\bm{x}, \bm{w})}^{-2} \times \\
+         & 1 \times e^{f_5(\bm{x}, \bm{w})} \times -1 \times 1 \times w_i \\
+        \end{align*}
+        
+                \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+        
+        \begin{align*}
+        \frac{\partial E}{\partial x_i} =&  f_2(\bm{x}, \bm{w}, \ell) \times {f_4(\bm{x}, \bm{w})}^{-2} \times e^{f_5(\bm{x}, \bm{w})} \times w_i
+        \end{align*}
+}
+
+
+\againframe{diagram}
+
+\frame {
+\begin{center}
+\Huge Vector operations:
+\end{center}
+
+\ \\
+Weighted summation (forward):
+\begin{align*}
+f_7 &= \bm{x} \cdot \bm{w}
+\end{align*}
+
+\ \\
+Weight update (backward):
+\begin{align*}
+\frac{\partial E}{\partial \bm{x}} &= \frac{\partial E}{\partial f_8} \cdot \bm{w} \\
+\bm{w} &= \frac{\partial E}{\partial \bm{x}} + \bm{w}
+\end{align*}
+
+}
+
+\frame{
+
+  \begin{center}
+  \begin{tikzpicture}
+    [neuron/.style={circle,draw=black,fill=white,inner sep=1.5pt,minimum size=10mm,outer sep=0.5pt},
+    >=stealth',
+    scale=0.7,transform shape]
+    
+    \node          (i00)                               {$1$};
+    \node          (i01)      [below=5mm of i00]      {$x_1$};
+    \node          (i02)      [below=5mm of i01]      {$x_2$};
+    \node          (i03)      [below=5mm of i02]      {\vdots};
+    \node          (i0N)      [below=5mm of i03]      {$x_n$};
+    
+    \node          (n02)      [right=23mm of x02]     {\vdots};
+    \node [neuron] (n01)      [above=20mm of n02]     {$H_1$};
+    \node [neuron] (n03)      [below=20mm of n02]     {$H_m$};
+    \node [neuron] (e01)      [right=20mm of n02]     {$E$};
+    \node          (l01)      [below=15mm of e01]     {$\ell$};
+
+    
+
+    
+    \draw [->] (i00) -- (n01) node[sloped, midway, above] {$\bm{w}_1^{(1)}$} ;
+    \draw [->] (i01) -- (n01) ;
+    \draw [->] (i02) -- (n01) ;
+    \draw [->] (i0N) -- (n01) ;
+
+    \draw [->] (i00) -- (n03) ;
+    \draw [->] (i01) -- (n03) ;
+    \draw [->] (i02) -- (n03) ;
+    \draw [->] (i0N) -- (n03) node[sloped, midway, below] {$\bm{w}_m^{(1)}$} ;
+
+        
+    \draw [->] (n01) -- (e01) ;
+    \draw [->] (n03) -- (e01) ;
+    \draw [->] (l01) -- (e01) ;
+    
+  \end{tikzpicture}
+
+  \end{center}
+
+Let $\bm{w}^{(i,j)}$ be the incoming weights for the $i^{\textrm{th}}$ node of the $j^{\textrm{th}}$ layer
+
+\ \\
+
+Let $w_k^{(i,j)}$ be the incoming weight from the $k^{\textrm{th}}$ node of the $(i-1)^{\textrm{th}}$ layer into the $i^{\textrm{th}}$ node of the $j^{\textrm{th}}$ layer
+
+}
+
+
+\frame{
+
+Let $\bm{x}$ be a $1 \times (n+1)$ matrix of input values.
+
+\ \\
+
+Let $\bm{w}^{(j)}$ be a $(n+1) \times m$ matrix of weights for layer $j$, where the $i^{\textrm{th}}$ column represents weights $\bm{w}^{(i,j)}$.
+\begin{align*}
+\renewcommand*{\arraystretch}{2}
+[\only<2->{\textcolor{red}}{x_0, x_1, \ldots, x_n}] \cdot
+\begin{bmatrix}%
+\only<2>{\textcolor{red}}{w_{0}^{(1,j)}\ \ } \only<3>{\textcolor{red}}{w_{0}^{(2,j)}\ \ } \only<4>{\textcolor{red}}{w_{0}^{(3,j)}\ \ } {\ldots\ \ } \only<5>{\textcolor{red}}{w_{0}^{(m,j)}\ \ }\\
+\only<2>{\textcolor{red}}{w_{1}^{(1,j)}\ \ } \only<3>{\textcolor{red}}{w_{1}^{(2,j)}\ \ } \only<4>{\textcolor{red}}{w_{1}^{(3,j)}\ \ } {\ldots\ \ } \only<5>{\textcolor{red}}{w_{1}^{(m,j)}\ \ }\\
+\vdots \\ 
+\only<2>{\textcolor{red}}{w_{n}^{(1,j)}\ \ } \only<3>{\textcolor{red}}{w_{n}^{(2,j)}\ \ } \only<4>{\textcolor{red}}{w_{n}^{(3,j)}\ \ } {\ldots\ \ } \only<5>{\textcolor{red}}{w_{n}^{(m,j)}\ \ }\\
+\end{bmatrix} \\
+= [\only<2>{\textcolor{red}}{\bm{x} \cdot \bm{w}^{(1,j)}\ \ } \only<3>{\textcolor{red}}{\bm{x} \cdot \bm{w}^{(2,j)}\ \ } \only<4>{\textcolor{red}}{\bm{x} \cdot \bm{w}^{(3,j)}\ \ } {\ldots\ \ } \only<5>{\textcolor{red}}{\bm{x} \cdot \bm{w}^{(m,j)}\ \ }]
+\end{align*}
+
+}
+
+
+\input{license}
+
+
+%\input{components/linear_unit}
+
+
+%\input{tmp}
+
+
+\end{document}
